@@ -14,5 +14,20 @@ datasource db {
 model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
-  name  String?
+  name  String
+  password String
+  flags Int @default(0)
+  phone Int 
+  Transaction TransactionHistory[]
+
+
+}
+
+model TransactionHistory{
+  id Int @id @default(autoincrement())
+  time DateTime @default(now())
+  amount Int
+  Payer User @relation(fields: [fromUserId] , references: [id])
+  fromUserId Int @unique 
+  toUserId Int @unique
 }
