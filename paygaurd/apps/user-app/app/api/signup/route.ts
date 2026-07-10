@@ -1,14 +1,17 @@
 // post request for signup
-import { prisma, PrismaClient } from "@repo/db";
+import { prisma } from "@repo/db";
 import { signupSchema } from "@repo/schemas";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { generateToken } from "@/lib/auth/jwt";
+import { setAuthCookie } from "@/lib/auth/cookies";
 export async function POST(request: Request) {
-  let body; 
- try{ body = await request.json();}
- catch(err){
-  return NextResponse.json({msg : "invalid Json"} ,{ status :400})
- }
+  let body;
+  try {
+    body = await request.json();
+  } catch (err) {
+    return NextResponse.json({ msg: "invalid Json" }, { status: 400 });
+  }
   const parseBody = signupSchema.safeParse(body);
 
   if (parseBody.success) {
@@ -19,7 +22,7 @@ export async function POST(request: Request) {
     if (!duplicateUser) {
       try {
         const hashPassword = await bcrypt.hash(password, 10);
-       const user = await prisma.user.create({
+        const user = await prisma.user.create({
           data: {
             name: name,
             email: email,
@@ -27,7 +30,10 @@ export async function POST(request: Request) {
             password: hashPassword,
           },
         });
-        const userpayload = user.id
+        const payload = { id: user.id, email: user.email };
+        const token = await generateToken(payload);
+       await setAuthCookie(token);
+
         return NextResponse.json({ msg: "user created" }, { status: 201 });
       } catch (err) {
         console.error(err);

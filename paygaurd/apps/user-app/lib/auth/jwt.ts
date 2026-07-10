@@ -20,7 +20,7 @@ export async function generateToken(payload: jwtpayload) {
   return jwt;
 }
 
-export async function verifyToken(token : string){
- const {payload} = await jose.jwtVerify(token , encodedSecret);
- return payload;
+export async function verifyToken(token: string) {
+  const { payload } = await jose.jwtVerify(token, encodedSecret);
+  return payload;
 }
