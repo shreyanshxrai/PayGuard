@@ -12,7 +12,7 @@ export async function GET(request : Request) {
         if(payload){
             const { id } = payload;
             const userId = Number(id)
-            const balance = await prisma.user.findUnique({where : {id : userId} , select : {}})
+            const balance = await prisma.user.findUnique({where : {id : userId} , select : {balance : true}})
             if(balance){
             return NextResponse.json(balance, {status : 200})}
 
