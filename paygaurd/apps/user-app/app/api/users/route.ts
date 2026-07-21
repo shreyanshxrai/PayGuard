@@ -11,12 +11,12 @@ export async function GET() {
     if (!payload) {
       return NextResponse.json({ msg: "Unauthorized" }, { status: 401 });
     }
+    const { id } = payload;
+    const userId = Number(id);
     const Users = await prisma.user.findMany({
+      where: { NOT: { id: userId } },
       select: { id: true, name: true },
     });
-    if (Users.length === 0) {
-      return NextResponse.json({ msg: "No Users yet" }, { status: 404 });
-    }
     return NextResponse.json(Users, { status: 200 });
   } catch (err) {
     console.error(err);
