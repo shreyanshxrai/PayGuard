@@ -18,6 +18,7 @@ model User {
   password String
   flags Int @default(0)
   phone Int 
+  balance Int
   Transaction TransactionHistory[]
 
 
