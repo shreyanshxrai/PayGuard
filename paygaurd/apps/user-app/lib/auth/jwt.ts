@@ -3,7 +3,6 @@ const secret = process.env.JWT_SECRET;
 if (!secret) {
   throw new Error("SECRET is not defined");
 }
-console.log(process.env.JWT_SECRET);
 const encodedSecret = new TextEncoder().encode(secret);
 const alg = "HS256";
 interface jwtpayload {
