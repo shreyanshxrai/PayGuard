@@ -1,18 +1,24 @@
-//server express
-import express , { type Express, type Request, type Response } from 'express';
-import cors from 'cors'
+import express from "express";
+import cors from "cors";
+import transactionRouter from "./routes/transaction.js";
 
-const app: Express = express();
-const router = express.Router()
-const port = 3000;
-express.json();
+const app = express();
 
-app.use(cors())
+app.use(cors());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+app.use(express.json());
+
+app.get("/health", (_, res) => {
+  res.status(200).json({
+    success: true,
+    message: "PayGuard Express API is running",
+  });
 });
 
-app.listen(port, () => {
-  console.log(`app listening on port ${port}`);
+app.use("/transaction", transactionRouter);
+
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
