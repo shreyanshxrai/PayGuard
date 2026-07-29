@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authMiddleware } from "../middleware/auth.js";
 import { verifierMiddleware } from "../middleware/verifier.js";
+import { sendMoneyController } from "../controllers/transaction.controllers.js";
 
 const router = Router();
 
@@ -17,11 +18,6 @@ const router = Router();
     Controller
 */
 
-router.post("/send", authMiddleware, verifierMiddleware, (req, res) => {
-  return res.json({
-    success: true,
-    message: "Authenticated successfully",
-  });
-});
+router.post("/send", authMiddleware, verifierMiddleware, sendMoneyController);
 
 export default router;
