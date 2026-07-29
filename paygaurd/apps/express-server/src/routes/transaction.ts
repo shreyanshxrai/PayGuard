@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../middleware/auth.js";
+import { verifierMiddleware } from "../middleware/verifier.js";
 
 const router = Router();
 
@@ -16,7 +17,7 @@ const router = Router();
     Controller
 */
 
-router.post("/send", authMiddleware, (req, res) => {
+router.post("/send", authMiddleware, verifierMiddleware, (req, res) => {
   return res.json({
     success: true,
     message: "Authenticated successfully",
