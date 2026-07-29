@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authMiddleware } from "../middleware/auth.js";
 
 const router = Router();
 
@@ -15,10 +16,10 @@ const router = Router();
     Controller
 */
 
-router.post("/send", (req, res) => {
-  return res.status(200).json({
+router.post("/send", authMiddleware, (req, res) => {
+  return res.json({
     success: true,
-    message: "Transaction endpoint reached.",
+    message: "Authenticated successfully",
   });
 });
 
