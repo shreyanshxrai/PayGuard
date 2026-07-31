@@ -1,5 +1,7 @@
+import { RULE_CONFIG } from "../config/ruleconfig.js";
+
 export function largeAmountRule(amount: number) {
-  const threshold = 10000;
+  const threshold = RULE_CONFIG.LARGE_TRANSACTION;
   if (amount > threshold) {
     return {
       score: 30,
