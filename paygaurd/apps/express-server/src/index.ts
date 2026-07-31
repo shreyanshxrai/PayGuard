@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import transactionRouter from "./routes/transaction.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 
@@ -14,7 +15,7 @@ app.get("/health", (_, res) => {
     message: "PayGuard Express API is running",
   });
 });
-
+app.use(errorHandler);
 app.use("/transaction", transactionRouter);
 
 const PORT = process.env.PORT || 3001;
