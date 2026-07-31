@@ -1,8 +1,9 @@
 import { RULE_CONFIG } from "../config/ruleconfig.js";
+import type { RulesContext } from "./RulesContext.js";
 
-export function largeAmountRule(amount: number) {
+export function largeAmountRule(rulecontext: RulesContext) {
   const threshold = RULE_CONFIG.LARGE_TRANSACTION;
-  if (amount > threshold) {
+  if (rulecontext.amount > threshold) {
     return {
       score: 30,
       reason:
