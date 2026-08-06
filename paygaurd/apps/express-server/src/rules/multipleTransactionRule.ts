@@ -3,9 +3,7 @@ import { multipleTransactionService } from "../services/multipleTransaction.serv
 import type { RulesContext } from "./RulesContext.js";
 export async function multipleTransactionRule(rulecontext: RulesContext) {
   const THRESHOLD = RULE_CONFIG.MULTIPLE_TRANSACTIONS;
-  const transactionCount = await multipleTransactionService(
-    rulecontext.senderId,
-  );
+  const transactionCount = await multipleTransactionService(rulecontext);
   if (transactionCount > THRESHOLD) {
     return {
       score: 25,

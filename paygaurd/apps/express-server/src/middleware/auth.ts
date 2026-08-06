@@ -13,7 +13,7 @@ export interface AuthRequest extends Request {
 export async function authMiddleware(
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const token = req.cookies?.token;
@@ -33,7 +33,8 @@ export async function authMiddleware(
     };
 
     next();
-  } catch {
+  } catch (error) {
+    next(error);
     return res.status(401).json({
       success: false,
       message: "Invalid or expired token",

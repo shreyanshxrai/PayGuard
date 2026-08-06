@@ -1,4 +1,5 @@
 import { prisma } from "@repo/db";
+import { logger } from "../logger/logger.js";
 interface SendMoneyInput {
   senderId: number;
   receiverId: number;
@@ -52,6 +53,6 @@ export async function transactionService(data: SendMoneyInput) {
       return console.log("Transaction completed successfully");
     });
   } catch (error) {
-    throw new Error(`Transaction failed: ${error}`);
+    logger.error("Transaction failed:");
   }
 }

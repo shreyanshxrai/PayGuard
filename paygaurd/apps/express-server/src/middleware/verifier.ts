@@ -1,10 +1,12 @@
 import { type Response, type NextFunction } from "express";
 import { type AuthRequest } from "./auth.js";
+import { AppError } from "../utils/appError.js";
+import { logger } from "../logger/logger.js";
 
 export async function verifierMiddleware(
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const { amount, receiverId } = req.body;
@@ -18,10 +20,11 @@ export async function verifierMiddleware(
     }
 
     // Placeholder for future fraud detection
-    console.log("Running transaction verification...");
+    logger.info("Running transaction verification...");
 
     next();
   } catch (error) {
+    next(error);
     return res.status(500).json({
       success: false,
       message: "Verification failed",
