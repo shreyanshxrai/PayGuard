@@ -1,7 +1,6 @@
 import { type Response, type NextFunction } from "express";
 import { type AuthRequest } from "./auth.js";
 import { verifyTransaction } from "../services/verifier.service.js";
-import { AppError } from "../utils/appError.js";
 import { logger } from "../logger/logger.js";
 
 export async function verifierMiddleware(
@@ -19,9 +18,24 @@ export async function verifierMiddleware(
         message: "Amount and receiverId are required",
       });
     }
-
+    const result = await verifyTransaction(amount, req.user?.id!, receiverId);
+    if (result.riskLevel === "CRITICAL") {
+      return res.status(403).json({
+        success: false,
+        message: "Transaction blocked due to high risk",
+        reasons: result.reasons,
+      });
+    }
+    if (result.riskLevel === "HIGH") {
+      const riskMessage = `Transaction flagged as high risk. Reasons: ${result.reasons.join(", ")}`;
+      console.warn(riskMessage);
+    }
+    if (result.riskLevel === "MEDIUM") {
+      const riskMessage = `Transaction flagged as medium risk. Reasons: ${result.reasons.join(", ")}`;
+      console.warn(riskMessage);
+    }
     // Placeholder for future fraud detection
-    console.log("Running transaction verification...");
+    logger.info("Running transaction verification...");
 
     next();
   } catch (error) {
