@@ -1,7 +1,7 @@
 import { type Request, type Response, type NextFunction } from "express";
 import { jwtVerify } from "jose";
 
-const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+const secret = new TextEncoder().encode("PASS123");
 
 export interface AuthRequest extends Request {
   user?: {
@@ -16,7 +16,7 @@ export async function authMiddleware(
   next: NextFunction,
 ) {
   try {
-    const token = req.cookies?.token;
+    const token = req.cookies["auth-token"];
 
     if (!token) {
       return res.status(401).json({
