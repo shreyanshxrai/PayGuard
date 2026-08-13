@@ -7,9 +7,8 @@ export async function multipleTransactionService(
   const transactionCount = await prisma.transactionHistory.count({
     where: {
       fromUserId: rulecontext.senderId,
-      createdAt: {
-        gte: new Date(Date.now() - 24 * 60 * 60 * 1000), // Transactions in the last 24 hours
-      },
+      toUserId: rulecontext.receiverId,
+      //error in the below line,
     },
   });
   return transactionCount;

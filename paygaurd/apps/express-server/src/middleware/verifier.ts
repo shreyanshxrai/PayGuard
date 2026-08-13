@@ -12,7 +12,7 @@ export async function verifierMiddleware(
     const { amount, receiverId } = req.body;
 
     // Basic validation
-    if (!amount || !receiverId) {
+    if (amount == undefined || receiverId == undefined) {
       return res.status(400).json({
         success: false,
         message: "Amount and receiverId are required",
