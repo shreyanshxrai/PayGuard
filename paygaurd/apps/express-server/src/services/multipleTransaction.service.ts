@@ -8,7 +8,9 @@ export async function multipleTransactionService(
     where: {
       fromUserId: rulecontext.senderId,
       toUserId: rulecontext.receiverId,
-      //error in the below line,
+      time: {
+        gte: new Date(Date.now() - 24 * 60 * 60 * 1000), // last 24 hours
+      },
     },
   });
   return transactionCount;

@@ -3,6 +3,7 @@ import cors from "cors";
 import transactionRouter from "./routes/transaction.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { requestLogger } from "./middleware/requestLogger.js";
+import "dotenv/config";
 import cookieParser from "cookie-parser";
 
 const app = express();
