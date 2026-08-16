@@ -1,10 +1,7 @@
 import { isNewRecipient } from "../services/isNewRecipient.service.js";
 import type { RulesContext } from "./RulesContext.js";
 export async function newRecipientRule(rulecontext: RulesContext) {
-  const NewRecipient = await isNewRecipient(
-    rulecontext.receiverId,
-    rulecontext.senderId,
-  );
+  const NewRecipient = await isNewRecipient(rulecontext);
   if (NewRecipient) {
     return {
       score: 20,

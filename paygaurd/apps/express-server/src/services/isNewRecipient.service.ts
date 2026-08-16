@@ -1,13 +1,17 @@
 import { prisma } from "@repo/db";
+import type { RulesContext } from "../rules/RulesContext.js";
 export async function isNewRecipient(
-  receiverId: number,
-  senderId: number,
+  rulesContext: RulesContext,
 ): Promise<boolean> {
   // Check if the receiver is a new recipient for the sender
+  console.log({
+    fromUserId: rulesContext.senderId,
+    toUserId: rulesContext.receiverId,
+  });
   const isNewRecipient = await prisma.transactionHistory.findFirst({
     where: {
-      fromUserId: senderId,
-      toUserId: receiverId,
+      fromUserId: rulesContext.senderId,
+      toUserId: rulesContext.receiverId,
     },
   });
   return !!isNewRecipient;

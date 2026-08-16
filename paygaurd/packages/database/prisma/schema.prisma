@@ -13,21 +13,23 @@ datasource db {
 }
 
 model User {
-  id          Int                  @id @default(autoincrement())
-  email       String               @unique
-  name        String
-  password    String
-  flags       Int                  @default(0)
-  phone       String
-  balance     Int
-  Transaction TransactionHistory[]
+  id                   Int                  @id @default(autoincrement())
+  email                String               @unique
+  name                 String
+  password             String
+  flags                Int                  @default(0)
+  phone                String
+  balance              Int
+  sentTransactions     TransactionHistory[] @relation("SentTransactions")
+  receivedTransactions TransactionHistory[] @relation("ReceivedTransactions")
 }
 
 model TransactionHistory {
   id         Int      @id @default(autoincrement())
   time       DateTime @default(now())
   amount     Int
-  Payer      User     @relation(fields: [fromUserId], references: [id])
   fromUserId Int
   toUserId   Int
+  Payee      User     @relation("ReceivedTransactions", fields: [toUserId], references: [id])
+  Payer      User     @relation("SentTransactions", fields: [fromUserId], references: [id])
 }
