@@ -1,4 +1,5 @@
 export function nightTransferRule() {
+  console.log("checking night transfer rule");
   const hour = new Date().getHours();
   if (hour >= 0 && hour < 6) {
     return {

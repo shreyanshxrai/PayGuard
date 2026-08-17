@@ -2,6 +2,7 @@ import { RULE_CONFIG } from "../config/ruleconfig.js";
 import type { RulesContext } from "./RulesContext.js";
 
 export function largeAmountRule(rulecontext: RulesContext) {
+  console.log("checking Large amount rule");
   const threshold = RULE_CONFIG.LARGE_TRANSACTION;
   if (rulecontext.amount > threshold) {
     return {

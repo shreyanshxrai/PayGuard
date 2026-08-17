@@ -19,6 +19,7 @@ export async function verifierMiddleware(
       });
     }
     const result = await verifyTransaction(amount, req.user?.id!, receiverId);
+    console.log("running verifyTransaction");
     if (result.riskLevel === "CRITICAL") {
       return res.status(403).json({
         success: false,

@@ -16,6 +16,7 @@ export async function authMiddleware(
   next: NextFunction,
 ) {
   try {
+    console.log("running authmiddleware");
     const token = req.cookies["auth-token"];
 
     if (!token) {

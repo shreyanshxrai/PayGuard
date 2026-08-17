@@ -4,6 +4,7 @@ import type { RulesContext } from "../rules/RulesContext.js";
 export async function multipleTransactionService(
   rulecontext: RulesContext,
 ): Promise<number> {
+  console.log("checking multiple transaction rule");
   const transactionCount = await prisma.transactionHistory.count({
     where: {
       fromUserId: rulecontext.senderId,
