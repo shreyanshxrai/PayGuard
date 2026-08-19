@@ -17,7 +17,12 @@ const router = Router();
         ↓
     Controller
 */
-
-router.post("/send", authMiddleware, verifierMiddleware, sendMoneyController);
+router.post("/verify", authMiddleware, verifierMiddleware, (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Transaction verified successfully",
+  });
+});
+router.post("/send", authMiddleware, sendMoneyController);
 
 export default router;
