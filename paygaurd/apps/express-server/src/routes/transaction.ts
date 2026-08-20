@@ -23,6 +23,6 @@ router.post("/verify", authMiddleware, verifierMiddleware, (req, res) => {
     message: "Transaction verified successfully",
   });
 });
-router.post("/send", authMiddleware, verifierMiddleware, sendMoneyController);
+router.post("/send", authMiddleware, sendMoneyController);
 
 export default router;

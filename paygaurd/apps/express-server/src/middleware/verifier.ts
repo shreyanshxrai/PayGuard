@@ -30,10 +30,22 @@ export async function verifierMiddleware(
     if (result.riskLevel === "HIGH") {
       const riskMessage = `Transaction flagged as high risk. Reasons: ${result.reasons.join(", ")}`;
       console.warn(riskMessage);
+      return res.status(403).json({
+        success: true,
+        requireConfirmation: true,
+        message: "Transaction blocked due to high risk",
+        reasons: result.reasons,
+      });
     }
     if (result.riskLevel === "MEDIUM") {
       const riskMessage = `Transaction flagged as medium risk. Reasons: ${result.reasons.join(", ")}`;
       console.warn(riskMessage);
+      return res.status(403).json({
+        success: true,
+        requireConfirmation: true,
+        message: "Transaction blocked due to high risk",
+        reasons: result.reasons,
+      });
     }
     // Placeholder for future fraud detection
     logger.info("Running transaction verification...");
