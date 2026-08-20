@@ -14,5 +14,6 @@ export async function multipleTransactionService(
       },
     },
   });
+  console.log(transactionCount, "transactions found in the last 24 hours");
   return transactionCount;
 }

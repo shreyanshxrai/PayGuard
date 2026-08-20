@@ -12,5 +12,5 @@ export async function isNewRecipient(
       toUserId: rulesContext.receiverId,
     },
   });
-  return !!isNewRecipient;
+  return !isNewRecipient;
 }

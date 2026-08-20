@@ -20,6 +20,7 @@ export async function verifierMiddleware(
     }
     const result = await verifyTransaction(amount, req.user?.id!, receiverId);
     console.log("running verifyTransaction");
+    console.log("Verification result:", result);
     if (result.riskLevel === "CRITICAL") {
       return res.status(403).json({
         success: false,
@@ -43,7 +44,7 @@ export async function verifierMiddleware(
       return res.status(403).json({
         success: true,
         requireConfirmation: true,
-        message: "Transaction blocked due to high risk",
+        message: "Transaction blocked due to medium risk",
         reasons: result.reasons,
       });
     }

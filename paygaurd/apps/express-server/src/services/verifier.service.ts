@@ -40,7 +40,7 @@ export async function verifyTransaction(
         : rules.reduce((acc, rule) => acc + rule.score, 0) ==
             RULE_CONFIG.HIGH_RISK_SCORE
           ? "HIGH"
-          : rules.reduce((acc, rule) => acc + rule.score, 0) >
+          : rules.reduce((acc, rule) => acc + rule.score, 0) >=
               RULE_CONFIG.MEDIUM_RISK_SCORE
             ? "MEDIUM"
             : "LOW",
