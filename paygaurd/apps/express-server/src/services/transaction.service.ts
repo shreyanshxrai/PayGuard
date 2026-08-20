@@ -9,7 +9,6 @@ interface SendMoneyInput {
 export async function transactionService(data: SendMoneyInput) {
   const { senderId, receiverId, amount } = data;
   try {
-    console.log("Initializing transaction service");
     if (amount <= 0) {
       console.error("Amount must be greater than zero");
       throw new Error("Amount must be greater than zero");
