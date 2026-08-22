@@ -1,9 +1,30 @@
-import { getHistory, getUsers } from "@/lib/api/users";
+"use client";
+import { getBalance } from "@/lib/api/account";
+import { getHistory, getMe, getUsers } from "@/lib/api/users";
+import { useState, useEffect } from "react";
 
 export default function dashboard() {
-  const users = getUsers() || [];
+  const [users, setUsers] = useState([]);
+  const [history, setHistory] = useState([]);
+  const [user, setUser] = useState(null);
+  const [balance, setBalance] = useState(0);
 
-  const history = getHistory() || [];
+  useEffect(() => {
+    async function fetchData() {
+      const usersData = await getUsers();
+      setUsers(usersData);
+
+      const historyData = await getHistory();
+      setHistory(historyData);
+
+      const userData = await getMe();
+      setUser(userData);
+      const userBalance = await getBalance();
+      setBalance(userBalance);
+    }
+
+    fetchData();
+  }, []);
 
   return (
     <main className="min-h-screen bg-gray-100">
@@ -15,22 +36,22 @@ export default function dashboard() {
           <div className="space-y-4">
             <div>
               <p className="text-sm text-gray-500">Name</p>
-              <p className="font-medium">Shreyansh Rai</p>
+              <p className="font-medium">{user?.name}</p>
             </div>
 
             <div>
               <p className="text-sm text-gray-500">Email</p>
-              <p className="font-medium">shreyansh@gmail.com</p>
+              <p className="font-medium">{user?.email}</p>
             </div>
 
             <div>
               <p className="text-sm text-gray-500">Phone</p>
-              <p className="font-medium">+91 9876543210</p>
+              <p className="font-medium">{user?.phone}</p>
             </div>
 
             <div>
               <p className="text-sm text-gray-500">Wallet Balance</p>
-              <p className="text-2xl font-bold text-green-600">₹12,540</p>
+              <p className="text-2xl font-bold text-green-600">₹{balance}</p>
             </div>
           </div>
         </div>
