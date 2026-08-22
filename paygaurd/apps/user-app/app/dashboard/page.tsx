@@ -112,13 +112,11 @@ export default function dashboard() {
               <tbody>
                 {history.map((item) => (
                   <tr key={item.id} className="border-b hover:bg-gray-50">
-                    <td className="py-4">{item.name}</td>
-                    <td>{item.amount}</td>
-                    <td>
-                      <span className="rounded bg-green-100 px-3 py-1 text-sm text-green-700">
-                        {item.status}
-                      </span>
-                    </td>
+                    <td className="py-4">{item.toUserId}</td>
+
+                    <td>₹{item.amount}</td>
+
+                    <td>{new Date(item.time).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>
