@@ -8,23 +8,38 @@ export default function dashboard() {
   const [history, setHistory] = useState([]);
   const [user, setUser] = useState(null);
   const [balance, setBalance] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
-      const usersData = await getUsers();
-      setUsers(usersData);
+      try {
+        const [usersData, historyData, userData, userBalance] =
+          await Promise.all([getUsers(), getHistory(), getMe(), getBalance()]);
 
-      const historyData = await getHistory();
-      setHistory(historyData);
-
-      const userData = await getMe();
-      setUser(userData);
-      const userBalance = await getBalance();
-      setBalance(userBalance);
+        setUsers(usersData);
+        setHistory(historyData);
+        setUser(userData);
+        setBalance(userBalance);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchData();
   }, []);
+  if (loading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+
+          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gray-100">
@@ -103,7 +118,7 @@ export default function dashboard() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b">
-                  <th className="py-3 text-left">User Name</th>
+                  <th className="py-3 text-left">Receiver Name</th>
                   <th className="py-3 text-left">Amount</th>
                   <th className="py-3 text-left">Date</th>
                 </tr>
