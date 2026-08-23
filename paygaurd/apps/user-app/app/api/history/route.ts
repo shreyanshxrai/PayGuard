@@ -20,6 +20,9 @@ export async function GET(request: Request) {
             },
           },
         },
+        orderBy: {
+          time: "desc",
+        },
       });
       if (history.length === 0) {
         return NextResponse.json({ msg: "No transactions" }, { status: 404 });

@@ -103,20 +103,25 @@ export default function dashboard() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="border-b">
-                  <th className="py-3 text-left">User</th>
+                  <th className="py-3 text-left">User Name</th>
                   <th className="py-3 text-left">Amount</th>
-                  <th className="py-3 text-left">Status</th>
+                  <th className="py-3 text-left">Date</th>
                 </tr>
               </thead>
 
               <tbody>
                 {history.map((item) => (
                   <tr key={item.id} className="border-b hover:bg-gray-50">
-                    <td className="py-4">{item.toUserId}</td>
+                    <td className="py-4">{item.Payee?.name}</td>
 
                     <td>₹{item.amount}</td>
 
-                    <td>{new Date(item.time).toLocaleDateString()}</td>
+                    <td>
+                      {new Date(item.time).toLocaleString("en-IN", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </td>
                   </tr>
                 ))}
               </tbody>
