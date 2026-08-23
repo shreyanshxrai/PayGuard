@@ -13,6 +13,13 @@ export async function GET(request: Request) {
       const fromUserId = Number(id);
       const history = await prisma.transactionHistory.findMany({
         where: { fromUserId: fromUserId },
+        include: {
+          Payee: {
+            select: {
+              name: true,
+            },
+          },
+        },
       });
       if (history.length === 0) {
         return NextResponse.json({ msg: "No transactions" }, { status: 404 });
