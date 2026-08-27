@@ -15,6 +15,14 @@ export async function getUsers() {
 
   return response.json();
 }
+
+export async function getUserById(id: number) {
+  const response = await fetch(`${API_URL}/api/users/user?id=${id}`, {
+    credentials: "include",
+  });
+  return response.json();
+}
+
 export async function getHistory() {
   const response = await fetch(`${API_URL}/api/history`, {
     credentials: "include",
