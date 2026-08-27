@@ -9,7 +9,12 @@ import { prisma } from "@repo/db";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  }),
+);
 app.use(requestLogger);
 app.use(cookieParser());
 app.use(express.json());

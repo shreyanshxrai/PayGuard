@@ -20,6 +20,7 @@ const router = Router();
 router.post("/verify", authMiddleware, verifierMiddleware, (req, res) => {
   res.status(200).json({
     success: true,
+    riskLevel: "LOW",
     message: "Transaction verified successfully",
   });
 });

@@ -1,11 +1,13 @@
 "use client";
 import { verifyTransaction } from "@/lib/api/transaction";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, UserCheck } from "lucide-react";
 import Link from "next/link";
 import VerifyModal from "@/components/ui/verifyModal";
 import { sendTransaction as sendMoney } from "@/lib/api/transaction";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { getUserById } from "@/lib/api/users";
+import { getBalance } from "@/lib/api/account";
 
 function numberToWords(num: number) {
   if (num === 0) return "Zero Rupees Only";
@@ -79,12 +81,15 @@ export default function SendMoneyPage() {
   const [riskResult, setRiskResult] = useState(null);
 
   const [loading, setLoading] = useState(false);
+  const [balance, setBalance] = useState<number | null>(null);
+  const [balanceLoading, setBalanceLoading] = useState(false);
+  const [showBalance, setShowBalance] = useState(false);
+  const [receiver, setReceiver] = useState(null);
 
-  const searchParams = useSearchParams();
+  const params = useParams();
   const router = useRouter();
-  const receiverId = searchParams.get("id")
-    ? parseInt(searchParams.get("id")!)
-    : 0;
+  const receiverId = params.id;
+  const parsedReceiverId = parseInt(receiverId, 10);
 
   const amountInWords = useMemo(() => {
     if (!amount) return "";
@@ -92,7 +97,7 @@ export default function SendMoneyPage() {
   }, [amount]);
   async function handleSendClick() {
     try {
-      const result = await verifyTransaction(Number(amount), receiverId);
+      const result = await verifyTransaction(Number(amount), parsedReceiverId);
 
       setRiskResult(result);
       setShowModal(true);
@@ -104,7 +109,7 @@ export default function SendMoneyPage() {
     try {
       setLoading(true);
 
-      await sendMoney(Number(amount), receiverId);
+      await sendMoney(Number(amount), parsedReceiverId);
 
       alert("Money sent successfully");
 
@@ -115,6 +120,41 @@ export default function SendMoneyPage() {
       setLoading(false);
     }
   }
+  async function handleFetchBalance() {
+    try {
+      if (balance !== null) {
+        setShowBalance((prev) => !prev);
+        return;
+      }
+
+      setBalanceLoading(true);
+
+      const data = await getBalance();
+
+      setBalance(data.balance ?? data);
+      setShowBalance(true);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to fetch balance");
+    } finally {
+      setBalanceLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    async function fetchReceiver() {
+      try {
+        const data = await getUserById(parsedReceiverId);
+        setReceiver(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    if (parsedReceiverId) {
+      fetchReceiver();
+    }
+  }, [parsedReceiverId]);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-100 to-blue-50">
@@ -140,12 +180,16 @@ export default function SendMoneyPage() {
           {/* User */}
           <div className="flex flex-col items-center">
             <div className="flex h-24 w-24 items-center justify-center rounded-full bg-blue-600 text-3xl font-bold text-white shadow-lg">
-              S
+              {receiver ? receiver.name.charAt(0).toUpperCase() : "?"}
             </div>
 
-            <h2 className="mt-5 text-2xl font-bold">Shreyansh Rai</h2>
+            <h2 className="mt-5 text-2xl font-bold">
+              {receiver ? receiver.name : "User"}
+            </h2>
 
-            <p className="mt-1 text-gray-500">+91 9876543210</p>
+            <p className="mt-1 text-gray-500">
+              +91 {receiver ? receiver.phone : "1234567890"}
+            </p>
 
             <div className="mt-3 flex items-center gap-2 rounded-full bg-green-100 px-4 py-1 text-green-700">
               <UserCheck size={16} />
@@ -158,8 +202,20 @@ export default function SendMoneyPage() {
             <p className="text-sm text-gray-500">Available Balance</p>
 
             <h3 className="mt-1 text-3xl font-bold text-blue-700">
-              ₹12,540.00
+              {showBalance && balance !== null ? `₹${balance}` : "••••••"}
             </h3>
+
+            <button
+              onClick={handleFetchBalance}
+              disabled={balanceLoading}
+              className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:bg-gray-400"
+            >
+              {balanceLoading
+                ? "Loading..."
+                : showBalance
+                  ? "Hide Balance"
+                  : "Show Balance"}
+            </button>
           </div>
 
           {/* Amount */}
@@ -199,7 +255,9 @@ export default function SendMoneyPage() {
               <div className="flex justify-between">
                 <span className="text-gray-500">Recipient</span>
 
-                <span className="font-medium">Shreyansh Rai</span>
+                <span className="font-medium">
+                  {receiver ? receiver.name : "User"}
+                </span>
               </div>
 
               <div className="flex justify-between">

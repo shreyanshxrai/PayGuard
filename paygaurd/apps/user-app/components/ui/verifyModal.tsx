@@ -55,11 +55,9 @@ export default function VerifyModal({
         <div className="mt-4">
           <h3 className="font-semibold">Reasons</h3>
 
-          <ul className="mt-2 list-disc pl-5 text-sm text-gray-600">
-            {riskResult.reasons.map((reason, index) => (
-              <li key={index}>{reason}</li>
-            ))}
-          </ul>
+          {riskResult?.reasons?.map((reason, index) => (
+            <li key={index}>{reason}</li>
+          ))}
         </div>
 
         <div className="mt-6 flex gap-3">

@@ -1,20 +1,41 @@
 const TRANSACTION_API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+  process.env.EXPRESS_API_URL || "http://localhost:3001";
 export async function verifyTransaction(amount: number, receiverId: number) {
-  const response = await fetch(`${TRANSACTION_API_URL}/transactions/verify`, {
+  const response = await fetch(`${TRANSACTION_API_URL}/transaction/verify`, {
     method: "POST",
     credentials: "include",
-    body: JSON.stringify({ amount, receiverId }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      amount,
+      receiverId,
+    }),
   });
-  const data = await response.json();
-  return data;
+
+  if (!response.ok) {
+    throw new Error(`Verify failed: ${response.status}`);
+  }
+
+  return response.json();
 }
+
 export async function sendTransaction(amount: number, receiverId: number) {
-  const response = await fetch(`${TRANSACTION_API_URL}/transactions/send`, {
+  const response = await fetch(`${TRANSACTION_API_URL}/transaction/send`, {
     method: "POST",
     credentials: "include",
-    body: JSON.stringify({ amount, receiverId }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      amount,
+      receiverId,
+    }),
   });
-  const data = await response.json();
-  return data;
+
+  if (!response.ok) {
+    throw new Error(`Transaction failed: ${response.status}`);
+  }
+
+  return response.json();
 }
