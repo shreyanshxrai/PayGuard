@@ -234,11 +234,19 @@ export default function SendMoneyPage() {
             </Link>
 
             <button
+              onClick={handleSendClick}
               disabled={!amount || Number(amount) <= 0}
               className="flex-1 rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
             >
               Send Money
             </button>
+            <VerifyModal
+              isOpen={showModal}
+              onClose={() => setShowModal(false)}
+              onProceed={handleProceed}
+              loading={loading}
+              riskResult={riskResult}
+            />
           </div>
         </div>
       </div>

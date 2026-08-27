@@ -3,7 +3,7 @@ import { verifyToken } from "@/lib/auth/jwt";
 import { prisma } from "@repo/db";
 import { NextResponse } from "next/server";
 
-// get users list
+// get app user
 export async function GET() {
   try {
     const token = await getAuthCookie();
