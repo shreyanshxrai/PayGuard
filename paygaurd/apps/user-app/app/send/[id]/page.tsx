@@ -1,7 +1,10 @@
 "use client";
-
-import { ArrowLeft, ShieldCheck, UserCheck } from "lucide-react";
+import { verifyTransaction } from "@/lib/api/transaction";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowLeft, UserCheck } from "lucide-react";
 import Link from "next/link";
+import VerifyModal from "@/components/ui/verifyModal";
+import { sendTransaction as sendMoney } from "@/lib/api/transaction";
 import { useMemo, useState } from "react";
 
 function numberToWords(num: number) {
@@ -46,24 +49,23 @@ function numberToWords(num: number) {
   function convert(n: number): string {
     if (n < 20) return ones[n];
 
-    if (n < 100)
-      return `${tens[Math.floor(n / 10)]} ${ones[n % 10]}`.trim();
+    if (n < 100) return `${tens[Math.floor(n / 10)]} ${ones[n % 10]}`.trim();
 
     if (n < 1000)
       return `${ones[Math.floor(n / 100)]} Hundred ${convert(n % 100)}`.trim();
 
     if (n < 100000)
       return `${convert(Math.floor(n / 1000))} Thousand ${convert(
-        n % 1000
+        n % 1000,
       )}`.trim();
 
     if (n < 10000000)
       return `${convert(Math.floor(n / 100000))} Lakh ${convert(
-        n % 100000
+        n % 100000,
       )}`.trim();
 
     return `${convert(Math.floor(n / 10000000))} Crore ${convert(
-      n % 10000000
+      n % 10000000,
     )}`.trim();
   }
 
@@ -72,11 +74,47 @@ function numberToWords(num: number) {
 
 export default function SendMoneyPage() {
   const [amount, setAmount] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
+  const [riskResult, setRiskResult] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const receiverId = searchParams.get("id")
+    ? parseInt(searchParams.get("id")!)
+    : 0;
 
   const amountInWords = useMemo(() => {
     if (!amount) return "";
     return numberToWords(Number(amount));
   }, [amount]);
+  async function handleSendClick() {
+    try {
+      const result = await verifyTransaction(Number(amount), receiverId);
+
+      setRiskResult(result);
+      setShowModal(true);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async function handleProceed() {
+    try {
+      setLoading(true);
+
+      await sendMoney(Number(amount), receiverId);
+
+      alert("Money sent successfully");
+
+      router.push("/dashboard");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-100 to-blue-50">
@@ -91,9 +129,7 @@ export default function SendMoneyPage() {
             Back
           </Link>
 
-          <h1 className="text-xl font-bold text-blue-600">
-            Send Money
-          </h1>
+          <h1 className="text-xl font-bold text-blue-600">Send Money</h1>
 
           <div />
         </div>
@@ -107,13 +143,9 @@ export default function SendMoneyPage() {
               S
             </div>
 
-            <h2 className="mt-5 text-2xl font-bold">
-              Shreyansh Rai
-            </h2>
+            <h2 className="mt-5 text-2xl font-bold">Shreyansh Rai</h2>
 
-            <p className="mt-1 text-gray-500">
-              +91 9876543210
-            </p>
+            <p className="mt-1 text-gray-500">+91 9876543210</p>
 
             <div className="mt-3 flex items-center gap-2 rounded-full bg-green-100 px-4 py-1 text-green-700">
               <UserCheck size={16} />
@@ -123,9 +155,7 @@ export default function SendMoneyPage() {
 
           {/* Balance */}
           <div className="mt-8 rounded-2xl bg-blue-50 p-5">
-            <p className="text-sm text-gray-500">
-              Available Balance
-            </p>
+            <p className="text-sm text-gray-500">Available Balance</p>
 
             <h3 className="mt-1 text-3xl font-bold text-blue-700">
               ₹12,540.00
@@ -134,14 +164,10 @@ export default function SendMoneyPage() {
 
           {/* Amount */}
           <div className="mt-8">
-            <label className="mb-2 block font-medium">
-              Amount
-            </label>
+            <label className="mb-2 block font-medium">Amount</label>
 
             <div className="flex items-center rounded-xl border bg-gray-50 px-4 focus-within:border-blue-600">
-              <span className="text-2xl font-semibold text-gray-600">
-                ₹
-              </span>
+              <span className="text-2xl font-semibold text-gray-600">₹</span>
 
               <input
                 type="number"
@@ -157,9 +183,7 @@ export default function SendMoneyPage() {
           {/* Amount in words */}
           {amount && (
             <div className="mt-5 rounded-2xl border border-blue-100 bg-blue-50 p-4">
-              <p className="text-sm text-gray-500">
-                Amount in Words
-              </p>
+              <p className="text-sm text-gray-500">Amount in Words</p>
 
               <p className="mt-2 font-semibold text-blue-700">
                 {amountInWords}
@@ -167,61 +191,27 @@ export default function SendMoneyPage() {
             </div>
           )}
 
-          {/* AI Fraud Alert */}
-          <div className="mt-6 rounded-2xl border border-yellow-200 bg-yellow-50 p-5">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="text-yellow-600" />
-
-              <h3 className="font-semibold text-yellow-700">
-                AI Fraud Analysis
-              </h3>
-            </div>
-
-            <p className="mt-3 text-sm text-gray-600">
-              This recipient is new. Please verify the phone
-              number before sending money.
-            </p>
-
-            <div className="mt-3 inline-flex rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-              Risk Level: Low
-            </div>
-          </div>
-
           {/* Summary */}
           <div className="mt-8 rounded-2xl border bg-gray-50 p-5">
-            <h3 className="mb-4 text-lg font-semibold">
-              Payment Summary
-            </h3>
+            <h3 className="mb-4 text-lg font-semibold">Payment Summary</h3>
 
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-500">
-                  Recipient
-                </span>
+                <span className="text-gray-500">Recipient</span>
 
-                <span className="font-medium">
-                  Shreyansh Rai
-                </span>
+                <span className="font-medium">Shreyansh Rai</span>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-gray-500">
-                  Amount
-                </span>
+                <span className="text-gray-500">Amount</span>
 
-                <span className="font-medium">
-                  ₹{amount || "0"}
-                </span>
+                <span className="font-medium">₹{amount || "0"}</span>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-gray-500">
-                  Platform Fee
-                </span>
+                <span className="text-gray-500">Platform Fee</span>
 
-                <span className="font-medium">
-                  ₹0
-                </span>
+                <span className="font-medium">₹0</span>
               </div>
 
               <hr />
@@ -229,9 +219,7 @@ export default function SendMoneyPage() {
               <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
 
-                <span className="text-blue-600">
-                  ₹{amount || "0"}
-                </span>
+                <span className="text-blue-600">₹{amount || "0"}</span>
               </div>
             </div>
           </div>
