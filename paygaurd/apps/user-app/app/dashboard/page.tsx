@@ -1,12 +1,30 @@
 "use client";
 import { getBalance } from "@/lib/api/account";
 import { getHistory, getMe, getUsers } from "@/lib/api/users";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string;
+};
+
+type HistoryItem = {
+  id: number;
+  amount: number;
+  time: string;
+  Payee?: {
+    name: string;
+  };
+};
+
 export default function dashboard() {
-  const [users, setUsers] = useState([]);
-  const [history, setHistory] = useState([]);
-  const [user, setUser] = useState(null);
+  const router = useRouter();
+  const [users, setUsers] = useState<User[]>([]);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -94,7 +112,12 @@ export default function dashboard() {
                   <p className="text-sm text-gray-500">{user.email}</p>
                 </div>
 
-                <button className="rounded-md bg-blue-600 px-5 py-2 text-white hover:bg-blue-700">
+                <button
+                  className="rounded-md bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
+                  onClick={() => {
+                    router.push(`/send/${user.id}`);
+                  }}
+                >
                   Pay
                 </button>
               </div>

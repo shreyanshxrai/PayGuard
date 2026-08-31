@@ -17,6 +17,7 @@ export async function getUsers() {
 }
 
 export async function getUserById(id: number) {
+  console.log("API CALLED", id);
   const response = await fetch(`${API_URL}/api/users/user?id=${id}`, {
     credentials: "include",
   });

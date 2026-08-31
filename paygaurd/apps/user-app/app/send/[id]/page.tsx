@@ -49,12 +49,16 @@ function numberToWords(num: number) {
   ];
 
   function convert(n: number): string {
-    if (n < 20) return ones[n];
+    if (n < 20) return ones[n] ?? "";
 
-    if (n < 100) return `${tens[Math.floor(n / 10)]} ${ones[n % 10]}`.trim();
+    if (n < 100) {
+      const tensValue = tens[Math.floor(n / 10)] ?? "";
+      const onesValue = ones[n % 10] ?? "";
+      return `${tensValue} ${onesValue}`.trim();
+    }
 
     if (n < 1000)
-      return `${ones[Math.floor(n / 100)]} Hundred ${convert(n % 100)}`.trim();
+      return `${ones[Math.floor(n / 100)] ?? ""} Hundred ${convert(n % 100)}`.trim();
 
     if (n < 100000)
       return `${convert(Math.floor(n / 1000))} Thousand ${convert(
@@ -84,11 +88,14 @@ export default function SendMoneyPage() {
   const [balance, setBalance] = useState<number | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
   const [showBalance, setShowBalance] = useState(false);
-  const [receiver, setReceiver] = useState(null);
+  const [receiver, setReceiver] = useState<{
+    name: string;
+    phone: string;
+  } | null>(null);
 
   const params = useParams();
   const router = useRouter();
-  const receiverId = params.id;
+  const receiverId = params.id as string;
   const parsedReceiverId = parseInt(receiverId, 10);
 
   const amountInWords = useMemo(() => {
@@ -144,6 +151,7 @@ export default function SendMoneyPage() {
   useEffect(() => {
     async function fetchReceiver() {
       try {
+        console.log("Fetching receiver...");
         const data = await getUserById(parsedReceiverId);
         setReceiver(data);
       } catch (error) {
