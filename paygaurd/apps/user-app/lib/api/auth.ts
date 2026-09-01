@@ -30,7 +30,7 @@ export async function signUp(
   return data;
 }
 export async function logout() {
-  const response = await fetch("/api/auth/logout", {
+  const response = await fetch("/api/logout", {
     method: "POST",
     credentials: "include",
   });
