@@ -29,3 +29,11 @@ export async function signUp(
   const data = await response.json();
   return data;
 }
+export async function logout() {
+  const response = await fetch("/api/auth/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+
+  return response.json();
+}
