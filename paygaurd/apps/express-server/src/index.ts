@@ -40,8 +40,8 @@ app.get("/health", async (_, res) => {
 
 app.use("/transaction", transactionRouter);
 
-const PORT = process.env.PORT || 3001;
+const PORT = Number(process.env.PORT) || 3001;
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Express server running on port ${PORT}`);
 });
