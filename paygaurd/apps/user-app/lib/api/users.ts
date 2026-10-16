@@ -1,7 +1,5 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 export async function getMe() {
-  const response = await fetch(`${API_URL}/api/users/me`, {
+  const response = await fetch(`/api/users/me`, {
     credentials: "include",
   });
 
@@ -9,7 +7,7 @@ export async function getMe() {
 }
 
 export async function getUsers() {
-  const response = await fetch(`${API_URL}/api/users`, {
+  const response = await fetch(`/api/users`, {
     credentials: "include",
   });
 
@@ -18,14 +16,14 @@ export async function getUsers() {
 
 export async function getUserById(id: number) {
   console.log("API CALLED", id);
-  const response = await fetch(`${API_URL}/api/users/user?id=${id}`, {
+  const response = await fetch(`/api/users/user?id=${id}`, {
     credentials: "include",
   });
   return response.json();
 }
 
 export async function getHistory() {
-  const response = await fetch(`${API_URL}/api/history`, {
+  const response = await fetch(`/api/history`, {
     credentials: "include",
   });
   return response.json();
