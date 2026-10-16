@@ -14,8 +14,8 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://paygaurdshreyanshxrai.vercel.app",
-      "pay-guard-33dd-452fks6pk-shreyanshxrais-projects.vercel.app",
-      "https://pay-guard-33dd.vercel.app/",
+      "https://pay-guard-33dd-452fks6pk-shreyanshxrais-projects.vercel.app",
+      "https://pay-guard-33dd.vercel.app",
     ],
     credentials: true,
   }),
