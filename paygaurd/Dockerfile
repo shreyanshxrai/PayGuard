@@ -7,7 +7,7 @@ COPY . .
 
 RUN npm ci
 
-RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy?schema=public" npm run db:generate --workspace=@repo/db
+RUN npm run db:generate --workspace=@repo/db
 
 RUN npx turbo run build --filter=express-server...
 
