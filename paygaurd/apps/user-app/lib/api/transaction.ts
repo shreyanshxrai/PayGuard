@@ -1,5 +1,4 @@
-const TRANSACTION_API_URL =
-  process.env.EXPRESS_API_URL || "http://localhost:3001";
+const TRANSACTION_API_URL = process.env.EXPRESS_API_URL;
 export async function verifyTransaction(amount: number, receiverId: number) {
   const response = await fetch(`${TRANSACTION_API_URL}/transaction/verify`, {
     method: "POST",
