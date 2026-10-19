@@ -4,16 +4,10 @@
   "globalEnv": ["DATABASE_URL", "JWT_SECRET", "NEXT_PUBLIC_API_URL", "EXPRESS_API_URL"],
   "tasks": {
     "build": {
-  "dependsOn": ["^db:generate", "^build"],
-  "inputs": ["$TURBO_DEFAULT$", ".env*"],
-  "outputs": [
-    "dist/**",
-    ".next/**",
-    "!.next/cache/**",
-    "!.next/dev/**",
-    "generated/**"
-  ]
-},
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "!.next/dev/**"]
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },
