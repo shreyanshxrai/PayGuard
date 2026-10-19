@@ -23,7 +23,7 @@ export default function SignIn() {
 
       await signIn(email, password);
 
-      router.push("/dashboard");
+      router.replace("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {

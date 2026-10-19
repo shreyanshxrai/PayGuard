@@ -10,7 +10,7 @@ export async function setAuthCookie(token: string) {
     path: "/",
     sameSite: "none",
     maxAge: 60 * 60 * 24,
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
   });
 }
 
