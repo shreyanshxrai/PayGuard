@@ -8,7 +8,7 @@ export async function setAuthCookie(token: string) {
     value: token,
     httpOnly: true,
     path: "/",
-    sameSite: "lax",
+    sameSite: "none",
     maxAge: 60 * 60 * 24,
     secure: process.env.NODE_ENV === "production",
   });
