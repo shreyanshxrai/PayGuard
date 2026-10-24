@@ -19,8 +19,8 @@ export async function deleteAuthCookie() {
   cookieStore.delete(AUTH_COOKIE);
 }
 
-export async function getAuthCookie() {
+export async function getAuthCookie(): Promise<string> {
   const cookieStore = await cookies();
   const token = cookieStore.get(AUTH_COOKIE);
-  return token?.value;
+  return token?.value || "";
 }
