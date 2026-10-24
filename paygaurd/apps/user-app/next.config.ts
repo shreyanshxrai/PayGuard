@@ -10,7 +10,7 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: ":path*",
+        source: "/send",
         destination: "https://payguard-iy1w.onrender.com/:path*",
       },
     ];
